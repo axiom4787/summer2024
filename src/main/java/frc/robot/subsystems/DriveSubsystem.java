@@ -22,6 +22,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import swervelib.parser.SwerveParser;
 import swervelib.SwerveDrive;
 import swervelib.telemetry.SwerveDriveTelemetry;
@@ -32,6 +35,7 @@ public class DriveSubsystem extends SubsystemBase
   /** Creates a new DriveSubsystem. */
   private final double maximumSpeed = Units.feetToMeters(4.5);
   private SwerveDrive swerveDrive;
+  private Field2d m_field;
     
   public DriveSubsystem() 
   {
@@ -47,6 +51,8 @@ public class DriveSubsystem extends SubsystemBase
     }
     swerveDrive.setHeadingCorrection(false);
     swerveDrive.setCosineCompensator(false);
+    m_field = new Field2d();
+    SmartDashboard.putData(m_field);
 
     AutoBuilder.configureHolonomic(
             this::getPose, // Robot pose supplier
@@ -116,6 +122,11 @@ public class DriveSubsystem extends SubsystemBase
   {
     // This method will be called once per scheduler run
     //swerveDrive.addVisionMeasurement(getVisionPose(), Timer.getFPGATimestamp());
+    SmartDashboard.putNumber("Pose X", swerveDrive.getPose().getX());
+    SmartDashboard.putNumber("Pose Y", swerveDrive.getPose().getY());  
+    SmartDashboard.putNumber("Pose Theta Degrees", swerveDrive.getPose().getRotation().getDegrees());
+    m_field.setRobotPose(getPose());
+    
   }
 
   @Override
