@@ -22,14 +22,18 @@ public final class Constants
     public static final int kBottomIndexerId = 10; // neo 550
     public static final int kFloorIntakeId = 9; // neo
     public static final int kRollerClawId = 14; // neo 
+    public static final int kBlinkinPort = 0; // blinkin/spark
 
     public static final double kClimberDutyCycle = 0.75;
     public static final double kShooterLaunchDutyCycle = 1;
     public static final double kShooterIntakeDutyCycle = -0.5;
     public static final double kShooterShootSpeed = 4;
+    public static final double kShooterConversionFactor = 0.1 * 1/60;
     public static final double kTopIndexerLaunchDutyCycle = 1;
-    public static final double kTopIndexerIntakeDutyCycle = -0.6;
-    public static final double kFloorIntakeDutyCycle = 0.3;
-    public static final double kBottomIndexerDutyCycle = 0.6;
+    public static final double kTopIndexerIntakeDutyCycle = -0.3;
+    public static final double kFloorIntakeDutyCycle = 0.6;
+    public static final double kBottomIndexerDutyCycle = 0.3;
     public static final double kRollerClawDutyCycle = 0.2;
+    public static final double kDrivingDeadband = 0.1;
+    public static final double kTurningDeadband = 0.1;
 }

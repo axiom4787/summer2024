@@ -24,6 +24,11 @@ public class IntakeShooterSubsystem extends SubsystemBase {
     m_bottomIndexer = new CANSparkMax(Constants.kBottomIndexerId, MotorType.kBrushless);
     m_floorIntake = new CANSparkMax(Constants.kFloorIntakeId, MotorType.kBrushless);
 
+    m_frontShooter.getEncoder()
+      .setVelocityConversionFactor(Constants.kShooterConversionFactor);
+    m_backShooter.getEncoder()
+      .setVelocityConversionFactor(Constants.kShooterConversionFactor);
+
     m_frontShooter.setIdleMode(IdleMode.kCoast);
     m_backShooter.setIdleMode(IdleMode.kCoast);
     m_topIndexer.setIdleMode(IdleMode.kCoast);
@@ -54,33 +59,39 @@ public class IntakeShooterSubsystem extends SubsystemBase {
       case kShoot:
         m_frontShooter.set(Constants.kShooterLaunchDutyCycle);
         m_backShooter.set(Constants.kShooterLaunchDutyCycle);
+        m_floorIntake.set(0);
         if (m_frontShooter.getEncoder().getVelocity() > Constants.kShooterShootSpeed
           && m_backShooter.getEncoder().getVelocity() > Constants.kShooterShootSpeed)
         {
           m_topIndexer.set(Constants.kTopIndexerLaunchDutyCycle);
           m_bottomIndexer.set(Constants.kBottomIndexerDutyCycle);
-          m_floorIntake.set(Constants.kFloorIntakeDutyCycle);
         }
         else
         {
           m_topIndexer.set(0);
           m_bottomIndexer.set(0);
-          m_floorIntake.set(0);
         }
         break;
       case kSpit:
-        m_frontShooter.set(Constants.kShooterIntakeDutyCycle);
-        m_backShooter.set(Constants.kShooterIntakeDutyCycle);
+        m_frontShooter.set(0);
+        m_backShooter.set(0);
         m_topIndexer.set(Constants.kTopIndexerIntakeDutyCycle);
         m_bottomIndexer.set(-Constants.kBottomIndexerDutyCycle);
-        m_floorIntake.set(-Constants.kFloorIntakeDutyCycle);
+        m_floorIntake.set(Constants.kFloorIntakeDutyCycle);
         break;
-      case kIntake:
+      case kSourceIntake:
         m_frontShooter.set(Constants.kShooterIntakeDutyCycle);
         m_backShooter.set(Constants.kShooterIntakeDutyCycle);
         m_topIndexer.set(Constants.kTopIndexerIntakeDutyCycle);
         m_bottomIndexer.set(Constants.kBottomIndexerDutyCycle);
-        m_floorIntake.set(Constants.kFloorIntakeDutyCycle);
+        m_floorIntake.set(0);
+        break;
+      case kFloorIntake:
+        m_frontShooter.set(0);
+        m_backShooter.set(0);
+        m_topIndexer.set(Constants.kTopIndexerIntakeDutyCycle);
+        m_bottomIndexer.set(Constants.kBottomIndexerDutyCycle);
+        m_floorIntake.set(-Constants.kFloorIntakeDutyCycle);
         break;
     }
   }
@@ -95,6 +106,7 @@ public class IntakeShooterSubsystem extends SubsystemBase {
     kOff,
     kShoot,
     kSpit,
-    kIntake,
+    kSourceIntake,
+    kFloorIntake,
   }
 }

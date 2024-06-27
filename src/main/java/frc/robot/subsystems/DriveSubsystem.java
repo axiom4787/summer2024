@@ -15,10 +15,15 @@ import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
@@ -36,6 +41,7 @@ public class DriveSubsystem extends SubsystemBase
   private final double maximumSpeed = Units.feetToMeters(4.5);
   private SwerveDrive swerveDrive;
   private Field2d m_field;
+  private boolean m_fieldRelative, m_poseLocked;
     
   public DriveSubsystem() 
   {
@@ -52,6 +58,8 @@ public class DriveSubsystem extends SubsystemBase
     swerveDrive.setHeadingCorrection(false);
     swerveDrive.setCosineCompensator(false);
     m_field = new Field2d();
+    m_fieldRelative = true;
+    m_poseLocked = false;
     SmartDashboard.putData(m_field);
 
     AutoBuilder.configureHolonomic(
@@ -91,6 +99,16 @@ public class DriveSubsystem extends SubsystemBase
     swerveDrive.resetOdometry(startingPose);
   }
 
+  public void zeroGyro()
+  {
+    swerveDrive.zeroGyro();
+  }
+
+  public void togglePoseLocked()
+  {
+    m_poseLocked = !m_poseLocked;
+  }
+
   public ChassisSpeeds getRobotRelativeSpeeds() 
   {
     return swerveDrive.getRobotVelocity();
@@ -104,29 +122,51 @@ public class DriveSubsystem extends SubsystemBase
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotation) 
   {
     return run(() -> {
-      swerveDrive.drive(new Translation2d(translationX.getAsDouble() * swerveDrive.getMaximumVelocity(),
-                                          translationY.getAsDouble() * swerveDrive.getMaximumVelocity()),
-                        angularRotation.getAsDouble() * swerveDrive.getMaximumAngularVelocity(),
-                        true,
-                        false);
+      if (m_poseLocked)
+        swerveDrive.lockPose();
+      else
+        swerveDrive.drive(
+          new Translation2d(
+            MathUtil.applyDeadband(translationX.getAsDouble() * swerveDrive.getMaximumVelocity(), Constants.kDrivingDeadband),
+            MathUtil.applyDeadband(translationY.getAsDouble() * swerveDrive.getMaximumVelocity(), Constants.kDrivingDeadband)),
+          MathUtil.applyDeadband(angularRotation.getAsDouble() * swerveDrive.getMaximumAngularVelocity(), Constants.kTurningDeadband),
+          m_fieldRelative,
+          false);
     });
   }
 
   private Pose2d getVisionPose()
   {
-    return new Pose2d();
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-front");
+    double[] values = table.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
+    
+    return new Pose2d(values[0], values[1], Rotation2d.fromDegrees(values[5]));
+  }
+
+  public void toggleFieldRelative()
+  {
+    m_fieldRelative = !m_fieldRelative;
+  }
+
+  public void findStartingVisionPose()
+  {
+    Pose2d visionPose = getVisionPose();
+    if (visionPose.getX() != 0.0 && visionPose.getY() != 0.0)
+      swerveDrive.resetOdometry(visionPose);    
   }
 
   @Override
   public void periodic() 
   {
     // This method will be called once per scheduler run
-    //swerveDrive.addVisionMeasurement(getVisionPose(), Timer.getFPGATimestamp());
+    Pose2d visionPose = getVisionPose();
+    if (visionPose.getX() != 0.0 && visionPose.getY() != 0.0)
+      swerveDrive.addVisionMeasurement(getVisionPose(), Timer.getFPGATimestamp());
     SmartDashboard.putNumber("Pose X", swerveDrive.getPose().getX());
     SmartDashboard.putNumber("Pose Y", swerveDrive.getPose().getY());  
     SmartDashboard.putNumber("Pose Theta Degrees", swerveDrive.getPose().getRotation().getDegrees());
     m_field.setRobotPose(getPose());
-    
+
   }
 
   @Override
@@ -134,4 +174,5 @@ public class DriveSubsystem extends SubsystemBase
   {
     // This method will be called once per scheduler run during simulation
   }
+
 }

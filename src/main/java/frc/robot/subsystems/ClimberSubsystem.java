@@ -56,7 +56,6 @@ public class ClimberSubsystem extends SubsystemBase
   {
     if (state == m_state)
       return;
-    System.out.println("Changing climber state from "+m_state+" to "+state);
     m_state = state;
   }
 
