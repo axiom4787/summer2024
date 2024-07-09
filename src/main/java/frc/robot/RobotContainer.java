@@ -15,7 +15,6 @@ import frc.robot.subsystems.RollerSubsystem.RollerState;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -139,6 +138,8 @@ public class RobotContainer {
 
   public Command getTeleopCommand() 
   {
+    // Drives the robot based on joystick input
+    // The translational movement can also be controlled by the d-pad to adjust the robot's position in small increments.
     return m_driveSubsystem.driveCommand(
       () -> m_controller.getHID().getPOV() != -1 
         ? Constants.kDriveAdjustSpeed * Math.cos(Math.toRadians(-m_controller.getHID().getPOV())) 

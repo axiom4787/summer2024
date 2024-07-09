@@ -19,7 +19,6 @@ public class IntakeShooterSubsystem extends SubsystemBase {
   private CANSparkMax m_frontShooter, m_backShooter, m_topIndexer, m_bottomIndexer, m_floorIntake;
   private Spark m_blinkin = new Spark(0);
 
-  /** Creates a new IntakeShooterSubsystem. */
   public IntakeShooterSubsystem() {
     m_frontShooter = new CANSparkMax(Constants.kFrontShooterId, MotorType.kBrushless);
     m_backShooter = new CANSparkMax(Constants.kBackShooterId, MotorType.kBrushless);
@@ -64,9 +63,12 @@ public class IntakeShooterSubsystem extends SubsystemBase {
         m_blinkin.set(0.91);
         break;
       case kShoot:
+        // Launches a note out of the shooter motors.
         m_frontShooter.set(Constants.kShooterLaunchDutyCycle);
         m_backShooter.set(Constants.kShooterLaunchDutyCycle);
         m_floorIntake.set(0);
+
+        // When shooter motors are at a high enough speed, activate indexers to move note into shooter.
         if (m_frontShooter.getEncoder().getVelocity() > Constants.kShooterShootSpeed
           && m_backShooter.getEncoder().getVelocity() > Constants.kShooterShootSpeed)
         {
@@ -74,6 +76,7 @@ public class IntakeShooterSubsystem extends SubsystemBase {
           m_bottomIndexer.set(Constants.kBottomIndexerDutyCycle);
           m_blinkin.set(0.15);
         }
+        // Otherwise, wait for the motors to spin up so that the note can get enough speed when launched.
         else
         {
           m_topIndexer.set(0);
@@ -82,6 +85,7 @@ public class IntakeShooterSubsystem extends SubsystemBase {
         }
         break;
       case kSpit:
+        // Deposits a note out of the floor intake.
         m_frontShooter.set(0);
         m_backShooter.set(0);
         m_topIndexer.set(Constants.kTopIndexerIntakeDutyCycle);
@@ -90,6 +94,7 @@ public class IntakeShooterSubsystem extends SubsystemBase {
         m_blinkin.set(0.61);
         break;
       case kSourceIntake:
+        // Intakes a note from the source through the shooter motors.
         m_frontShooter.set(Constants.kShooterIntakeDutyCycle);
         m_backShooter.set(Constants.kShooterIntakeDutyCycle);
         m_topIndexer.set(Constants.kTopIndexerIntakeDutyCycle);
@@ -98,6 +103,7 @@ public class IntakeShooterSubsystem extends SubsystemBase {
         m_blinkin.set(0.73);
         break;
       case kFloorIntake:
+        // Intakes a note from the ground through the floor intake.
         m_frontShooter.set(0);
         m_backShooter.set(0);
         m_topIndexer.set(Constants.kTopIndexerIntakeDutyCycle);

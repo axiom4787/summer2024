@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.util.Units;
-import swervelib.math.SwerveMath;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -30,7 +27,7 @@ public final class Constants
     public static final double kClimberDutyCycle = 0.75;
     public static final double kShooterLaunchDutyCycle = 1;
     public static final double kShooterIntakeDutyCycle = -0.5;
-    public static final double kShooterShootSpeed = 5.8;
+    public static final double kShooterShootSpeed = 5.8; // meters per second of shooter WHEELS
     public static final double kShooterConversionFactor = 0.0762 * 1/60;
     public static final double kTopIndexerLaunchDutyCycle = 1;
     public static final double kTopIndexerIntakeDutyCycle = -0.3;
@@ -40,7 +37,7 @@ public final class Constants
     public static final double kDrivingDeadband = 0.1;
     public static final double kTurningDeadband = 0.1;
 
+    // slower speeds for fine adjustments of robot position
     public static final double kDriveAdjustSpeed = 0.1;
     public static final double kTurnAdjustSpeed = 0.1;
-    public static final double test = (Math.PI * Units.inchesToMeters(3)) / (4.71 * 1);
 }

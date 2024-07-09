@@ -17,7 +17,7 @@ public class ClimberSubsystem extends SubsystemBase
 {
   private ClimberState m_state;
   private CANSparkMax m_leftClimber, m_rightClimber;
-  /** Creates a new ClimberSubsystem. */
+
   public ClimberSubsystem() 
   {
     m_leftClimber = new CANSparkMax(Constants.kLeftClimberId, MotorType.kBrushless);

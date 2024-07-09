@@ -37,7 +37,6 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class DriveSubsystem extends SubsystemBase 
 {
-  /** Creates a new DriveSubsystem. */
   private final double maximumSpeed = 5.71;
   private SwerveDrive swerveDrive;
   private Field2d m_field;
@@ -45,6 +44,7 @@ public class DriveSubsystem extends SubsystemBase
     
   public DriveSubsystem() 
   {
+    // uses yagsl config files in /deploy/swerve to create a swerve drive
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     try 
@@ -56,12 +56,14 @@ public class DriveSubsystem extends SubsystemBase
       throw new RuntimeException(e);
     }
     swerveDrive.setHeadingCorrection(false);
-    swerveDrive.setCosineCompensator(true);
+    swerveDrive.setCosineCompensator(true); // to make movement smoother when strafing
+    
+    // displays the robot pose within field on dashboard
     m_field = new Field2d();
+    SmartDashboard.putData(m_field);
+
     m_fieldRelative = true;
     m_poseLocked = false;
-    double p = Constants.test;
-    SmartDashboard.putData(m_field);
 
     AutoBuilder.configureHolonomic(
             this::getPose, // Robot pose supplier
@@ -100,11 +102,19 @@ public class DriveSubsystem extends SubsystemBase
     swerveDrive.resetOdometry(startingPose);
   }
 
+  /**
+   * Resets the NavX gyro and the rotation of the robot pose to 0.
+   */
   public void zeroGyro()
   {
     swerveDrive.zeroGyro();
   }
 
+  /**
+   * Toggles the robot between being locked and unlocked.
+   * In a locked state, all wheels point toward the center in an X shape, to prevent pushing from other bots.
+   * Robot behaves normally in unlocked state.
+   */
   public void togglePoseLocked()
   {
     m_poseLocked = !m_poseLocked;
@@ -121,6 +131,9 @@ public class DriveSubsystem extends SubsystemBase
     swerveDrive.drive(robotRelativeSpeeds);
   }
 
+  /**
+   * Returns a command to drive the robot based on inputs ranging from -1 to 1 (e.g. joystick axes)
+   */
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotation) 
   {
     return run(() -> {
@@ -139,6 +152,10 @@ public class DriveSubsystem extends SubsystemBase
     });
   }
 
+  /**
+   * Returns the limelight's estimated bot pose, based on visible AprilTags.
+   * If no tags are visible, returns an empty Pose2d (0 x, 0 y, 0 radians).
+   */
   private Pose2d getVisionPose()
   {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-front");
@@ -146,11 +163,18 @@ public class DriveSubsystem extends SubsystemBase
     return new Pose2d(values[0], values[1], Rotation2d.fromDegrees(values[5]));
   }
 
+  /**
+   * Switches the robot's orientation between field and robot relative.
+   */
   public void toggleFieldRelative()
   {
     m_fieldRelative = !m_fieldRelative;
   }
 
+  /**
+   * Resets the robot's odometry to the limelight's estimated vision pose.
+   * Generally, should only be called at the start of teleop.
+   */
   public void findStartingVisionPose()
   {
     Pose2d visionPose = getVisionPose();
@@ -161,10 +185,12 @@ public class DriveSubsystem extends SubsystemBase
   @Override
   public void periodic() 
   {
-    // This method will be called once per scheduler run
+    // update bot pose based on ll vision estimate
     Pose2d visionPose = getVisionPose();
     if (visionPose.getX() != 0.0 && visionPose.getY() != 0.0)
       swerveDrive.addVisionMeasurement(getVisionPose(), Timer.getFPGATimestamp());
+
+    // logging
     SmartDashboard.putNumber("Pose X", swerveDrive.getPose().getX());
     SmartDashboard.putNumber("Pose Y", swerveDrive.getPose().getY());  
     SmartDashboard.putNumber("Pose Theta Degrees", swerveDrive.getPose().getRotation().getDegrees());
@@ -173,11 +199,4 @@ public class DriveSubsystem extends SubsystemBase
     m_field.setRobotPose(getPose());
 
   }
-
-  @Override
-  public void simulationPeriodic() 
-  {
-    // This method will be called once per scheduler run during simulation
-  }
-
 }

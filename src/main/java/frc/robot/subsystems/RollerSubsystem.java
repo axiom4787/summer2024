@@ -8,8 +8,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -17,7 +15,7 @@ public class RollerSubsystem extends SubsystemBase
 {
   private RollerState m_state;
   private CANSparkMax m_rollerClaw;
-  /** Creates a new ClimberSubsystem. */
+
   public RollerSubsystem() 
   {
     m_rollerClaw = new CANSparkMax(Constants.kRollerClawId, MotorType.kBrushless);
