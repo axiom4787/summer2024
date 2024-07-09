@@ -10,8 +10,10 @@ import frc.robot.subsystems.IntakeShooterSubsystem;
 import frc.robot.subsystems.RollerSubsystem;
 import frc.robot.subsystems.ClimberSubsystem.ClimberState;
 import frc.robot.subsystems.IntakeShooterSubsystem.IntakeShooterState;
+import frc.robot.subsystems.RollerSubsystem.RollerState;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -38,9 +40,26 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() 
   {
+    registerNamedCommands();
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
     configureBindings();
+  }
+
+  private void registerNamedCommands()
+  {
+    NamedCommands.registerCommand("shootNote", new InstantCommand(() -> {
+      m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kShoot);
+    }, m_intakeShooterSubsystem));
+    NamedCommands.registerCommand("intakeNote", new InstantCommand(() -> {
+      m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kFloorIntake);
+    }, m_intakeShooterSubsystem));
+    NamedCommands.registerCommand("spitNote", new InstantCommand(() -> {
+      m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kSpit);
+    }, m_intakeShooterSubsystem));
+    NamedCommands.registerCommand("disableIntakeShooter", new InstantCommand(() -> {
+      m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kOff);
+    }, m_intakeShooterSubsystem));
   }
 
   private void configureBindings()
@@ -66,11 +85,11 @@ public class RobotContainer {
       m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kOff);
     }));
 
-    Trigger climb = m_controller.povDown()
+    Trigger climb = m_controller.back()
     .onTrue(new InstantCommand(() -> {
       m_climberSubsystem.setDesiredState(ClimberState.kRetract);
     }));
-    Trigger unclimb = m_controller.povUp()
+    Trigger unclimb = m_controller.start()
     .onTrue(new InstantCommand(() -> {
       m_climberSubsystem.setDesiredState(ClimberState.kExtend);
     }));
@@ -93,6 +112,19 @@ public class RobotContainer {
     .onTrue(new InstantCommand(() -> {
       m_driveSubsystem.togglePoseLocked();
     }));
+
+    // Trigger rollerIntake = m_controller.back()
+    // .onTrue(new InstantCommand(() -> {
+    //   m_rollerSubsystem.setDesiredState(RollerState.kIntake);
+    // }));
+    // Trigger rollerSpit = m_controller.start()
+    // .onTrue(new InstantCommand(() -> {
+    //   m_rollerSubsystem.setDesiredState(RollerState.kSpit);
+    // }));
+    // rollerIntake.or(rollerSpit).negate()
+    // .onTrue(new InstantCommand(() -> {
+    //   m_rollerSubsystem.setDesiredState(RollerState.kOff);
+    // }));
   }
 
   public void findStartingVisionPose()
@@ -108,8 +140,12 @@ public class RobotContainer {
   public Command getTeleopCommand() 
   {
     return m_driveSubsystem.driveCommand(
-      () -> -m_controller.getLeftY(), 
-      () -> -m_controller.getLeftX(), 
-      () -> m_controller.getRightX());
+      () -> m_controller.getHID().getPOV() != -1 
+        ? Constants.kDriveAdjustSpeed * Math.cos(Math.toRadians(-m_controller.getHID().getPOV())) 
+        : -m_controller.getLeftY(), 
+      () -> m_controller.getHID().getPOV() != -1 
+        ? Constants.kDriveAdjustSpeed * Math.sin(Math.toRadians(-m_controller.getHID().getPOV())) 
+        : -m_controller.getLeftX(), 
+      () -> -m_controller.getRightX());
   }
 }

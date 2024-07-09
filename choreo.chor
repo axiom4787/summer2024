@@ -1,0 +1,63 @@
+{
+    "version": "v0.4",
+    "robotConfiguration": {
+        "mass": 44.45278620185516,
+        "rotationalInertia": 3.212062400122425,
+        "motorMaxTorque": 0.725,
+        "motorMaxVelocity": 4704,
+        "gearing": 4.71,
+        "wheelbase": 0.5714996913901667,
+        "trackWidth": 0.5714996913901667,
+        "bumperLength": 0.6603996433841925,
+        "bumperWidth": 0.6603996433841925,
+        "wheelRadius": 0.07619995885202221
+    },
+    "paths": {
+        "ChoreoTest": {
+            "waypoints": [
+                {
+                    "x": 1,
+                    "y": 1,
+                    "heading": 0,
+                    "isInitialGuess": false,
+                    "translationConstrained": true,
+                    "headingConstrained": true,
+                    "controlIntervalCount": 15
+                },
+                {
+                    "x": 3,
+                    "y": 1,
+                    "heading": 0,
+                    "isInitialGuess": false,
+                    "translationConstrained": true,
+                    "headingConstrained": true,
+                    "controlIntervalCount": 40
+                }
+            ],
+            "trajectory": [],
+            "trajectoryWaypoints": [],
+            "constraints": [
+                {
+                    "scope": [
+                        "first"
+                    ],
+                    "type": "StopPoint"
+                },
+                {
+                    "scope": [
+                        "last"
+                    ],
+                    "type": "StopPoint"
+                }
+            ],
+            "usesControlIntervalGuessing": true,
+            "defaultControlIntervalCount": 40,
+            "usesDefaultFieldObstacles": true,
+            "circleObstacles": [],
+            "eventMarkers": [],
+            "isTrajectoryStale": true
+        }
+    },
+    "splitTrajectoriesAtStopPoints": false,
+    "usesObstacles": false
+}

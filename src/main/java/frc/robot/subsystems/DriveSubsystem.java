@@ -38,7 +38,7 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 public class DriveSubsystem extends SubsystemBase 
 {
   /** Creates a new DriveSubsystem. */
-  private final double maximumSpeed = Units.feetToMeters(4.5);
+  private final double maximumSpeed = 5.71;
   private SwerveDrive swerveDrive;
   private Field2d m_field;
   private boolean m_fieldRelative, m_poseLocked;
@@ -56,10 +56,11 @@ public class DriveSubsystem extends SubsystemBase
       throw new RuntimeException(e);
     }
     swerveDrive.setHeadingCorrection(false);
-    swerveDrive.setCosineCompensator(false);
+    swerveDrive.setCosineCompensator(true);
     m_field = new Field2d();
     m_fieldRelative = true;
     m_poseLocked = false;
+    double p = Constants.test;
     SmartDashboard.putData(m_field);
 
     AutoBuilder.configureHolonomic(
@@ -68,10 +69,10 @@ public class DriveSubsystem extends SubsystemBase
             this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-                    4.5, // Max module speed, in m/s
-                    0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+                    new PIDConstants(2.5, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(5, 0.0, 0.0), // Rotation PID constants
+                    5.74, // Max module speed, in m/s
+                    0.4131, // Drive base radius in meters. Distance from robot center to furthest module.
                     new ReplanningConfig() // Default path replanning config. See the API for the options here
             ),
             () -> {
@@ -116,6 +117,7 @@ public class DriveSubsystem extends SubsystemBase
 
   public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) 
   {
+    System.out.println(robotRelativeSpeeds.omegaRadiansPerSecond);
     swerveDrive.drive(robotRelativeSpeeds);
   }
 
@@ -124,7 +126,8 @@ public class DriveSubsystem extends SubsystemBase
     return run(() -> {
       if (m_poseLocked)
         swerveDrive.lockPose();
-      else
+      else {
+//        System.out.printf("angular velocity: %.2f\n", MathUtil.applyDeadband(angularRotation.getAsDouble() * swerveDrive.getMaximumAngularVelocity(), Constants.kTurningDeadband));
         swerveDrive.drive(
           new Translation2d(
             MathUtil.applyDeadband(translationX.getAsDouble() * swerveDrive.getMaximumVelocity(), Constants.kDrivingDeadband),
@@ -132,14 +135,14 @@ public class DriveSubsystem extends SubsystemBase
           MathUtil.applyDeadband(angularRotation.getAsDouble() * swerveDrive.getMaximumAngularVelocity(), Constants.kTurningDeadband),
           m_fieldRelative,
           false);
+      }
     });
   }
 
   private Pose2d getVisionPose()
   {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-front");
-    double[] values = table.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
-    
+    double[] values = table.getEntry("botpose").getDoubleArray(new double[6]);
     return new Pose2d(values[0], values[1], Rotation2d.fromDegrees(values[5]));
   }
 
@@ -165,6 +168,8 @@ public class DriveSubsystem extends SubsystemBase
     SmartDashboard.putNumber("Pose X", swerveDrive.getPose().getX());
     SmartDashboard.putNumber("Pose Y", swerveDrive.getPose().getY());  
     SmartDashboard.putNumber("Pose Theta Degrees", swerveDrive.getPose().getRotation().getDegrees());
+    SmartDashboard.putBoolean("Field Relative", m_fieldRelative);
+    SmartDashboard.putBoolean("Pose Locked", m_poseLocked);
     m_field.setRobotPose(getPose());
 
   }

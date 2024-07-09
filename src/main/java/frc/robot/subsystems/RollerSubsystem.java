@@ -50,7 +50,6 @@ public class RollerSubsystem extends SubsystemBase
   {
     if (state == m_state)
       return;
-    System.out.println("Changing roller state from "+m_state+" to "+state);
     m_state = state;
   }
 
