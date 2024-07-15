@@ -21,13 +21,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import swervelib.parser.SwerveParser;
@@ -159,7 +157,7 @@ public class DriveSubsystem extends SubsystemBase
   private Pose2d getVisionPose()
   {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-front");
-    double[] values = table.getEntry("botpose").getDoubleArray(new double[6]);
+    double[] values = table.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
     return new Pose2d(values[0], values[1], Rotation2d.fromDegrees(values[5]));
   }
 
@@ -191,9 +189,6 @@ public class DriveSubsystem extends SubsystemBase
       swerveDrive.addVisionMeasurement(getVisionPose(), Timer.getFPGATimestamp());
 
     // logging
-    SmartDashboard.putNumber("Pose X", swerveDrive.getPose().getX());
-    SmartDashboard.putNumber("Pose Y", swerveDrive.getPose().getY());  
-    SmartDashboard.putNumber("Pose Theta Degrees", swerveDrive.getPose().getRotation().getDegrees());
     SmartDashboard.putBoolean("Field Relative", m_fieldRelative);
     SmartDashboard.putBoolean("Pose Locked", m_poseLocked);
     m_field.setRobotPose(getPose());

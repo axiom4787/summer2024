@@ -73,7 +73,7 @@ public class IntakeShooterSubsystem extends SubsystemBase {
           && m_backShooter.getEncoder().getVelocity() > Constants.kShooterShootSpeed)
         {
           m_topIndexer.set(Constants.kTopIndexerLaunchDutyCycle);
-          m_bottomIndexer.set(Constants.kBottomIndexerDutyCycle);
+          m_bottomIndexer.set(Constants.kBottomIndexerLaunchDutyCycle);
           m_blinkin.set(0.15);
         }
         // Otherwise, wait for the motors to spin up so that the note can get enough speed when launched.
@@ -89,7 +89,7 @@ public class IntakeShooterSubsystem extends SubsystemBase {
         m_frontShooter.set(0);
         m_backShooter.set(0);
         m_topIndexer.set(Constants.kTopIndexerIntakeDutyCycle);
-        m_bottomIndexer.set(-Constants.kBottomIndexerDutyCycle);
+        m_bottomIndexer.set(-Constants.kBottomIndexerIntakeDutyCycle);
         m_floorIntake.set(Constants.kFloorIntakeDutyCycle);
         m_blinkin.set(0.61);
         break;
@@ -98,7 +98,7 @@ public class IntakeShooterSubsystem extends SubsystemBase {
         m_frontShooter.set(Constants.kShooterIntakeDutyCycle);
         m_backShooter.set(Constants.kShooterIntakeDutyCycle);
         m_topIndexer.set(Constants.kTopIndexerIntakeDutyCycle);
-        m_bottomIndexer.set(Constants.kBottomIndexerDutyCycle);
+        m_bottomIndexer.set(Constants.kBottomIndexerIntakeDutyCycle);
         m_floorIntake.set(0);
         m_blinkin.set(0.73);
         break;
@@ -106,8 +106,8 @@ public class IntakeShooterSubsystem extends SubsystemBase {
         // Intakes a note from the ground through the floor intake.
         m_frontShooter.set(0);
         m_backShooter.set(0);
-        m_topIndexer.set(Constants.kTopIndexerIntakeDutyCycle);
-        m_bottomIndexer.set(Constants.kBottomIndexerDutyCycle);
+        m_topIndexer.set(Constants.kTopIndexerFloorIntakeDutyCycle);
+        m_bottomIndexer.set(Constants.kBottomIndexerIntakeDutyCycle);
         m_floorIntake.set(-Constants.kFloorIntakeDutyCycle);
         m_blinkin.set(0.83);
         break;

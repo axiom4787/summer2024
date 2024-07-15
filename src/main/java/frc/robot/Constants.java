@@ -31,8 +31,10 @@ public final class Constants
     public static final double kShooterConversionFactor = 0.0762 * 1/60;
     public static final double kTopIndexerLaunchDutyCycle = 1;
     public static final double kTopIndexerIntakeDutyCycle = -0.3;
+    public static final double kTopIndexerFloorIntakeDutyCycle = 0.6;
     public static final double kFloorIntakeDutyCycle = 0.6;
-    public static final double kBottomIndexerDutyCycle = 1;
+    public static final double kBottomIndexerIntakeDutyCycle = 0.6;
+    public static final double kBottomIndexerLaunchDutyCycle = 1;
     public static final double kRollerClawDutyCycle = 0.2;
     public static final double kDrivingDeadband = 0.1;
     public static final double kTurningDeadband = 0.1;

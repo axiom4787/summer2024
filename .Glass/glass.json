@@ -27,6 +27,7 @@
         "left": 46,
         "right": 1088,
         "top": 36,
+        "units": "meters",
         "width": 16.541748046875,
         "window": {
           "visible": true
