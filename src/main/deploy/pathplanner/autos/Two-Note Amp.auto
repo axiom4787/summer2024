@@ -3,7 +3,7 @@
   "startingPose": {
     "position": {
       "x": 1.55,
-      "y": 5.55
+      "y": 5.37
     },
     "rotation": 180.0
   },
@@ -11,6 +11,12 @@
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNote"
+          }
+        },
         {
           "type": "path",
           "data": {
@@ -21,6 +27,12 @@
           "type": "path",
           "data": {
             "pathName": "n1;p2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNote"
           }
         }
       ]

@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import frc.robot.commands.AlignTagCommand;
+import frc.robot.commands.AutoIntakeCommand;
+import frc.robot.commands.AutoShootCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeShooterSubsystem;
@@ -47,18 +50,8 @@ public class RobotContainer {
 
   private void registerNamedCommands()
   {
-    NamedCommands.registerCommand("shootNote", new InstantCommand(() -> {
-      m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kShoot);
-    }, m_intakeShooterSubsystem));
-    NamedCommands.registerCommand("intakeNote", new InstantCommand(() -> {
-      m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kFloorIntake);
-    }, m_intakeShooterSubsystem));
-    NamedCommands.registerCommand("spitNote", new InstantCommand(() -> {
-      m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kSpit);
-    }, m_intakeShooterSubsystem));
-    NamedCommands.registerCommand("disableIntakeShooter", new InstantCommand(() -> {
-      m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kOff);
-    }, m_intakeShooterSubsystem));
+    NamedCommands.registerCommand("shootNote", new AutoShootCommand(m_intakeShooterSubsystem));
+    NamedCommands.registerCommand("intakeNote", new AutoIntakeCommand(m_intakeShooterSubsystem));
   }
 
   private void configureBindings()
@@ -138,7 +131,7 @@ public class RobotContainer {
 
   public Command getTeleopCommand() 
   {
-    // Drives the robot based on joystick input
+    // Drives the robot based on joystick input 
     // The translational movement can also be controlled by the d-pad to adjust the robot's position in small increments.
     return m_driveSubsystem.driveCommand(
       () -> m_controller.getHID().getPOV() != -1 
@@ -148,5 +141,10 @@ public class RobotContainer {
         ? Constants.kDriveAdjustSpeed * Math.sin(Math.toRadians(-m_controller.getHID().getPOV())) 
         : -m_controller.getLeftX(), 
       () -> -m_controller.getRightX());
+  }
+
+  public Command getTestCommand()
+  {
+    return new AlignTagCommand(m_driveSubsystem);
   }
 }

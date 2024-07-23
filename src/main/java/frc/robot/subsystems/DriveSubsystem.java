@@ -129,6 +129,11 @@ public class DriveSubsystem extends SubsystemBase
     swerveDrive.drive(robotRelativeSpeeds);
   }
 
+  public void driveRobotRelative(double x, double y, double rot)
+  {
+    swerveDrive.drive(new Translation2d(x, y), rot, false, false);
+  }
+
   /**
    * Returns a command to drive the robot based on inputs ranging from -1 to 1 (e.g. joystick axes)
    */

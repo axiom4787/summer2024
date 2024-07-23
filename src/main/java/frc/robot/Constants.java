@@ -27,12 +27,13 @@ public final class Constants
     public static final double kClimberDutyCycle = 0.75;
     public static final double kShooterLaunchDutyCycle = 1;
     public static final double kShooterIntakeDutyCycle = -0.5;
-    public static final double kShooterShootSpeed = 5.8; // meters per second of shooter WHEELS
+    public static final double kShooterShootSpeed = 5.75; // meters per second of shooter WHEELS
     public static final double kShooterConversionFactor = 0.0762 * 1/60;
     public static final double kTopIndexerLaunchDutyCycle = 1;
     public static final double kTopIndexerIntakeDutyCycle = -0.3;
     public static final double kTopIndexerFloorIntakeDutyCycle = 0.6;
     public static final double kFloorIntakeDutyCycle = 0.6;
+    public static final int kTOFDistance = 100; // if tof range is less than this, we have a note
     public static final double kBottomIndexerIntakeDutyCycle = 0.6;
     public static final double kBottomIndexerLaunchDutyCycle = 1;
     public static final double kRollerClawDutyCycle = 0.2;

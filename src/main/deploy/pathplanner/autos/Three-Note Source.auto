@@ -34,6 +34,24 @@
           "data": {
             "name": "shootNote"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "p2;n3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "n3;p2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNote"
+          }
         }
       ]
     }

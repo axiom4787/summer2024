@@ -20,13 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "p2;n2"
+            "pathName": "p2;n3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "n2;p2"
+            "pathName": "n3;p2"
           }
         },
         {
