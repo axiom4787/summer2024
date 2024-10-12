@@ -2,7 +2,9 @@
   "robotWidth": 0.6604,
   "robotLength": 0.66,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "telop-auto"
+  ],
   "autoFolders": [],
   "defaultMaxVel": 2.0,
   "defaultMaxAccel": 2.0,

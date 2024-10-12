@@ -1,0 +1,67 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.3311524791627067,
+        "y": 5.557518855755684
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.2645304748639978,
+        "y": 0.9114954423381688
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 15.407349951353437,
+        "y": 1.0026175640259165
+      },
+      "prevControl": {
+        "x": 13.560495732401858,
+        "y": 0.07004173877398182
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "intake",
+      "waypointRelativePos": 0.0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "intakeNote"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 123.31775197440084,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "telop-auto",
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}
