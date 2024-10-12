@@ -12,7 +12,7 @@ import frc.robot.subsystems.IntakeShooterSubsystem.IntakeShooterState;
 public class AutoShootCommand extends Command {
   private final Timer timer = new Timer();
   private final double duration = 3000;
-  private double startTime = 0;
+  double startTime = 0;
   
   private IntakeShooterSubsystem m_intakeShooterSubsystem;
   /** Creates a new AutoShootCommand. 
