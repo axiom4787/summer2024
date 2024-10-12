@@ -122,7 +122,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() 
   {
-    return autoChooser.getSelected();
+    return m_driveSubsystem.getAutonomousCommand("Two-Note Center");
   }
 
   public Command getTeleopCommand() 

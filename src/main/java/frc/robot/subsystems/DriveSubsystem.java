@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -183,6 +184,18 @@ public class DriveSubsystem extends SubsystemBase
     Pose2d visionPose = getVisionPose();
     if (visionPose.getX() != 0.0 && visionPose.getY() != 0.0)
       swerveDrive.resetOdometry(visionPose);    
+  }
+
+  public void resetOdometry(Pose2d initialHolonomicPose)
+  {
+    swerveDrive.resetOdometry(initialHolonomicPose);
+  }
+
+  public Command getAutonomousCommand(String pathName)
+  {
+    // Create a path following command using AutoBuilder. This will also trigger event markers.
+    resetOdometry(PathPlannerAuto.getStaringPoseFromAutoFile(pathName));
+    return new PathPlannerAuto(pathName);
   }
 
   @Override
