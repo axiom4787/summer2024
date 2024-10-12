@@ -11,7 +11,8 @@ import frc.robot.subsystems.IntakeShooterSubsystem.IntakeShooterState;
 
 public class AutoShootCommand extends Command {
   private final Timer timer = new Timer();
-  private final double duration = 5;
+  private final double duration = 3000;
+  private double startTime = 0;
   
   private IntakeShooterSubsystem m_intakeShooterSubsystem;
   /** Creates a new AutoShootCommand. 
@@ -22,13 +23,15 @@ public class AutoShootCommand extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_intakeShooterSubsystem = intakeShooterSubsystem;
     addRequirements(intakeShooterSubsystem);
+    
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kShoot);
-    timer.reset();
+    // timer.reset();
+    startTime = Timer.getFPGATimestamp();
     timer.start();
   }
 
@@ -40,11 +43,18 @@ public class AutoShootCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kOff);
+    System.out.println("ended");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.hasElapsed(duration);
+    System.out.println(Timer.getFPGATimestamp());
+    if ((int)Timer.getFPGATimestamp()-(int)startTime == 4) {
+      System.out.println("end");
+      System.out.println(Timer.getFPGATimestamp());
+      return timer.hasElapsed(duration);
+    }
+    else {return false;}
   }
 }

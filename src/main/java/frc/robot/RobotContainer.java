@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.AlignTagCommand;
+import frc.robot.commands.AutoHumanIntakeCommand;
 import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -51,7 +52,8 @@ public class RobotContainer {
   private void registerNamedCommands()
   {
     NamedCommands.registerCommand("shootNote", new AutoShootCommand(m_intakeShooterSubsystem));
-    NamedCommands.registerCommand("intakeNote", new AutoIntakeCommand(m_intakeShooterSubsystem));
+    NamedCommands.registerCommand("intakeGroundNote", new AutoIntakeCommand(m_intakeShooterSubsystem));
+    NamedCommands.registerCommand("intakeHumanNote", new AutoHumanIntakeCommand(m_intakeShooterSubsystem));
   }
 
   private void configureBindings()
