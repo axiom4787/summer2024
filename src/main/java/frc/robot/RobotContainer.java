@@ -37,7 +37,7 @@ public class RobotContainer {
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   private final RollerSubsystem m_rollerSubsystem = new RollerSubsystem();
   private final SendableChooser<Command> autoChooser;
-  private final CommandXboxController m_controller = new CommandXboxController(0);
+  private final CommandXboxController m_controller = new CommandXboxController(2);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() 
