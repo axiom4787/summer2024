@@ -37,7 +37,7 @@ public class RobotContainer {
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   private final RollerSubsystem m_rollerSubsystem = new RollerSubsystem();
   private final SendableChooser<Command> autoChooser;
-  private final CommandXboxController m_controller = new CommandXboxController(2);
+  private final CommandXboxController m_controller = new CommandXboxController(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() 
@@ -56,10 +56,6 @@ public class RobotContainer {
 
   private void configureBindings()
   {
-    Trigger spitNote = m_controller.leftTrigger()
-    .onTrue(new InstantCommand(() -> {
-      m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kSpit);
-    }));
     Trigger floorIntake = m_controller.leftBumper()
     .onTrue(new InstantCommand(() -> {
       m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kFloorIntake);
@@ -72,7 +68,7 @@ public class RobotContainer {
     .onTrue(new InstantCommand(() -> {
       m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kShoot);
     }));
-    spitNote.or(floorIntake).or(sourceIntake).or(shootNote).negate()
+    floorIntake.or(sourceIntake).or(shootNote).negate()
     .onTrue(new InstantCommand(() -> {
       m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kOff);
     }));

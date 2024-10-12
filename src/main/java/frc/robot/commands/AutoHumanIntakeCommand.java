@@ -36,6 +36,7 @@ public class AutoHumanIntakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_intakeShooterSubsystem.hasNote();
+    // return m_intakeShooterSubsystem.hasNote();
+    return true;
   }
 }
