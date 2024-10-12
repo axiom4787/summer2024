@@ -4,12 +4,15 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeShooterSubsystem;
 import frc.robot.subsystems.IntakeShooterSubsystem.IntakeShooterState;
 
 public class AutoIntakeCommand extends Command {
   private IntakeShooterSubsystem m_intakeShooterSubsystem;
+  private final Timer timer = new Timer();
+  private final double duration = 2;
   /** Creates a new AutoIntakeCommand. */
   public AutoIntakeCommand(IntakeShooterSubsystem intakeShooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -21,6 +24,8 @@ public class AutoIntakeCommand extends Command {
   @Override
   public void initialize() {
     m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kFloorIntake);
+    timer.reset();
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,6 +41,6 @@ public class AutoIntakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_intakeShooterSubsystem.hasNote();
+    return timer.hasElapsed(duration);
   }
 }

@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.AlignTagCommand;
+import frc.robot.commands.AutoHumanIntakeCommand;
 import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -51,15 +52,12 @@ public class RobotContainer {
   private void registerNamedCommands()
   {
     NamedCommands.registerCommand("shootNote", new AutoShootCommand(m_intakeShooterSubsystem));
-    NamedCommands.registerCommand("intakeNote", new AutoIntakeCommand(m_intakeShooterSubsystem));
+    NamedCommands.registerCommand("intakeGroundNote", new AutoIntakeCommand(m_intakeShooterSubsystem));
+    NamedCommands.registerCommand("intakeHumanNote", new AutoHumanIntakeCommand(m_intakeShooterSubsystem));
   }
 
   private void configureBindings()
   {
-    Trigger spitNote = m_controller.leftTrigger()
-    .onTrue(new InstantCommand(() -> {
-      m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kSpit);
-    }));
     Trigger floorIntake = m_controller.leftBumper()
     .onTrue(new InstantCommand(() -> {
       m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kFloorIntake);
@@ -72,7 +70,7 @@ public class RobotContainer {
     .onTrue(new InstantCommand(() -> {
       m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kShoot);
     }));
-    spitNote.or(floorIntake).or(sourceIntake).or(shootNote).negate()
+    floorIntake.or(sourceIntake).or(shootNote).negate()
     .onTrue(new InstantCommand(() -> {
       m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kOff);
     }));
@@ -126,7 +124,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() 
   {
-    return autoChooser.getSelected();
+    return m_driveSubsystem.getAutonomousCommand("Two-Note Center");
   }
 
   public Command getTeleopCommand() 
