@@ -13,11 +13,10 @@ public class AutoShootCommand extends Command {
   private final Timer timer = new Timer();
   private final double duration = 3000;
   double startTime = 0;
+  double lastCheckTime = 0;
   
   private IntakeShooterSubsystem m_intakeShooterSubsystem;
   /** Creates a new AutoShootCommand. 
-   * 
-   * @param time 
   */
   public AutoShootCommand(IntakeShooterSubsystem intakeShooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -30,9 +29,10 @@ public class AutoShootCommand extends Command {
   @Override
   public void initialize() {
     m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kShoot);
-    // timer.reset();
+    timer.reset();
     startTime = Timer.getFPGATimestamp();
     timer.start();
+    System.out.println("started?");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,6 +42,7 @@ public class AutoShootCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    timer.stop();
     m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kOff);
     System.out.println("ended");
   }
@@ -49,12 +50,14 @@ public class AutoShootCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    System.out.println(Timer.getFPGATimestamp());
-    if ((int)Timer.getFPGATimestamp()-(int)startTime == 4) {
-      System.out.println("end");
-      System.out.println(Timer.getFPGATimestamp());
-      return timer.hasElapsed(duration);
-    }
-    else {return false;}
+    double currentTime = timer.get();
+    if (currentTime - lastCheckTime >= 0.2)
+      System.out.println("checking");
+      lastCheckTime = currentTime;
+      if (timer.hasElapsed(duration)) {
+        System.out.println("ending?");
+        return true;
+      }
+    return false;
   }
 }
