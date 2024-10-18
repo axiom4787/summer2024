@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -123,6 +125,11 @@ public class RobotContainer {
   public Command getAutonomousCommand() 
   {
     return m_driveSubsystem.getAutonomousCommand("Two-Note Center");
+  }
+
+  public Command oneNoteAuto()
+  {
+    return new SequentialCommandGroup(new AutoShootCommand(m_intakeShooterSubsystem));
   }
 
   public Command getTeleopCommand() 
