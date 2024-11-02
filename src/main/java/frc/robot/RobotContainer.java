@@ -23,7 +23,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -40,6 +42,7 @@ public class RobotContainer {
   private final RollerSubsystem m_rollerSubsystem = new RollerSubsystem();
   private final SendableChooser<Command> autoChooser;
   private final CommandXboxController m_controller = new CommandXboxController(0);
+  private ParallelRaceGroup timedShoot;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() 
@@ -48,11 +51,12 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
     configureBindings();
+    timedShoot = new WaitCommand(5).raceWith(new AutoShootCommand(m_intakeShooterSubsystem));
   }
 
   private void registerNamedCommands()
   {
-    NamedCommands.registerCommand("shootNote", new AutoShootCommand(m_intakeShooterSubsystem));
+    NamedCommands.registerCommand("shootNote", timedShoot);
     NamedCommands.registerCommand("intakeNote", new AutoIntakeCommand(m_intakeShooterSubsystem));
   }
 
