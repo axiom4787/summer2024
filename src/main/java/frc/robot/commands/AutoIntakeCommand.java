@@ -24,8 +24,8 @@ public class AutoIntakeCommand extends Command {
   @Override
   public void initialize() {
     m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kFloorIntake);
-    timer.reset();
-    timer.start();
+    // timer.reset();
+    // timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,11 +36,5 @@ public class AutoIntakeCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kOff);
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return timer.hasElapsed(duration);
   }
 }

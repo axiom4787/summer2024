@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.IntakeShooterSubsystem;
 import frc.robot.subsystems.IntakeShooterSubsystem.IntakeShooterState;
 
@@ -16,6 +17,7 @@ public class AutoShootCommand extends Command {
   double lastCheckTime = 0;
   
   private IntakeShooterSubsystem m_intakeShooterSubsystem;
+  private Command finishingCommand;
   /** Creates a new AutoShootCommand. 
   */
   public AutoShootCommand(IntakeShooterSubsystem intakeShooterSubsystem) {
@@ -29,10 +31,8 @@ public class AutoShootCommand extends Command {
   @Override
   public void initialize() {
     m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kShoot);
-    timer.reset();
-    startTime = Timer.getFPGATimestamp();
-    timer.start();
-    System.out.println("started?");
+    // timer.reset();
+    // timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,19 +45,5 @@ public class AutoShootCommand extends Command {
     timer.stop();
     m_intakeShooterSubsystem.setDesiredState(IntakeShooterState.kOff);
     System.out.println("ended");
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    double currentTime = timer.get();
-    if (currentTime - lastCheckTime >= 0.2)
-      System.out.println("checking");
-      lastCheckTime = currentTime;
-      if (timer.hasElapsed(duration)) {
-        System.out.println("ending?");
-        return true;
-      }
-    return false;
   }
 }

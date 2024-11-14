@@ -23,6 +23,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -38,7 +42,8 @@ public class RobotContainer {
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   private final RollerSubsystem m_rollerSubsystem = new RollerSubsystem();
   private final SendableChooser<Command> autoChooser;
-  private final CommandXboxController m_controller = new CommandXboxController(2);
+  private final CommandXboxController m_controller = new CommandXboxController(0);
+  private ParallelRaceGroup timedShoot;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() 
@@ -47,13 +52,14 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
     configureBindings();
+    timedShoot = new ParallelRaceGroup(new WaitCommand(5), new AutoShootCommand(m_intakeShooterSubsystem));
+    // timedShoot = (new WaitCommand(5)).raceWith(new AutoShootCommand(m_intakeShooterSubsystem));
   }
 
   private void registerNamedCommands()
   {
-    NamedCommands.registerCommand("shootNote", new AutoShootCommand(m_intakeShooterSubsystem));
-    NamedCommands.registerCommand("intakeGroundNote", new AutoIntakeCommand(m_intakeShooterSubsystem));
-    NamedCommands.registerCommand("intakeHumanNote", new AutoHumanIntakeCommand(m_intakeShooterSubsystem));
+    NamedCommands.registerCommand("shootNote", timedShoot);
+    NamedCommands.registerCommand("intakeNote", new AutoIntakeCommand(m_intakeShooterSubsystem));
   }
 
   private void configureBindings()
@@ -125,6 +131,11 @@ public class RobotContainer {
   public Command getAutonomousCommand() 
   {
     return m_driveSubsystem.getAutonomousCommand("Two-Note Center");
+  }
+
+  public Command oneNoteAuto()
+  {
+    return new SequentialCommandGroup(new AutoShootCommand(m_intakeShooterSubsystem));
   }
 
   public Command getTeleopCommand() 
