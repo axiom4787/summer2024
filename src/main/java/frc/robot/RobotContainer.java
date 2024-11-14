@@ -51,7 +51,8 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
     configureBindings();
-    timedShoot = new WaitCommand(5).raceWith(new AutoShootCommand(m_intakeShooterSubsystem));
+    timedShoot = new ParallelRaceGroup(new WaitCommand(5), new AutoShootCommand(m_intakeShooterSubsystem));
+    // timedShoot = (new WaitCommand(5)).raceWith(new AutoShootCommand(m_intakeShooterSubsystem));
   }
 
   private void registerNamedCommands()
